@@ -131,7 +131,7 @@ public class UnityPlayerAuth : MonoBehaviour
     [Button]
     public async void DeleteData(string key)
     {
-        await CloudSaveService.Instance.Data.Player.DeleteAsync(key);
+        await CloudSaveService.Instance.Data.Player.DeleteAsync(key,new Unity.Services.CloudSave.Models.Data.Player.DeleteOptions());
     }
 
 
