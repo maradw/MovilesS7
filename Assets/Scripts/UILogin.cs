@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UILogin : MonoBehaviour
+public partial class UILogin : MonoBehaviour
 {
     [SerializeField] private Transform loginPanel;
     [SerializeField] private Transform userPanel;
