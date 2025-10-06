@@ -8,10 +8,10 @@ using UnityEngine.UI;
 public class ExperienceBar : MonoBehaviour
 {
     [HeaderAttribute(" Life variables")]
-    public Image greenLifeBar;
-   [SerializeField] int currentLife = 0;
-   [SerializeField] int maxLife= 100;
-   [SerializeField] int minLife= 0;
+    public Image clicksBar;
+   [SerializeField] int currentClicks = 0;
+   [SerializeField] int maxClicks= 100;
+   [SerializeField] int minClicks= 0;
     [SerializeField] string key = "exp";
     [SerializeField] PlayerController playerController;
     [SerializeField] int level = 1;
@@ -30,31 +30,30 @@ public class ExperienceBar : MonoBehaviour
     int damageLevel = 0;
     void Update()
     {
-        LifeInGame();
+        ClicksInGame();
         UpdateLevel();
         SetText();
     }
 
-    void LifeInGame()
+    void ClicksInGame()
     {
-        greenLifeBar.fillAmount = (float)currentLife / maxLife;
+        clicksBar.fillAmount = (float)currentClicks / maxClicks;
     }
 
-    public void CurrentLifeInGame(int add)
+    public void CurrentClicksInGame(int add)
     {
-        currentLife += add;
-        currentLife = Mathf.Clamp(currentLife, minLife, maxLife);
+        currentClicks += add;
+        currentClicks = Mathf.Clamp(currentClicks, minClicks, maxClicks);
     }
     void SetText()
     {
-        experiencie.text = currentLife + "/" + maxLife + " exp";
+        experiencie.text = currentClicks + "/" + maxClicks + " exp";
         currentLevel.text = "Level: " + level;
         ability.text = "Ability: " + abilityLevel;
         fortune.text = "Fortune: " + fortuneLevel;
         strength.text = "Strength: " + strengthLevel;
         armor.text = "Armor: " + armorLevel;
         damage.text = "Damage: " + damageLevel;
-        Debug.Log(currentLife + "/" + maxLife);
     }
     public void AddStrength()
     {
@@ -86,14 +85,33 @@ public class ExperienceBar : MonoBehaviour
     }
     void UpdateLevel()
     {
-        if (currentLife >= maxLife)
+        if (currentClicks >= maxClicks)
         {
-           
-            Debug.Log("Level Up!");
-            currentLife = 0;
+            currentClicks = 0;
             abilityLevel += 5;
             level++;
         }
     }
+    public Dictionary<string, object> GetPlayerData()
+    {
+        var playerData = new Dictionary<string, object>()
+    {
+        {"level", level},
+        {"currentClicks", currentClicks},
+        {"abilityLevel", abilityLevel},
+        {"strengthLevel", strengthLevel},
+        {"armorLevel", armorLevel},
+        {"fortuneLevel", fortuneLevel},
+        {"damageLevel", damageLevel}
+    };
 
+        return playerData;
+    }
+    public void SetLevel(int value) => level = value;
+    public void SetCurrentClicks(int value) => currentClicks = value;
+    public void SetAbility(int value) => abilityLevel = value;
+    public void SetStrength(int value) => strengthLevel = value;
+    public void SetArmor(int value) => armorLevel = value;
+    public void SetFortune(int value) => fortuneLevel = value;
+    public void SetDamage(int value) => damageLevel = value;
 }

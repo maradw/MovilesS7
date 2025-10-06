@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using Unity.Services.Authentication;
 using UnityEditor;
@@ -19,7 +20,7 @@ public partial class UILogin : MonoBehaviour
 
     [SerializeField] private Button changeNameButton;
     [SerializeField] private UnityPlayerAuth unityPlayerAuth;
-
+    [SerializeField] CloudSave cloudSave;
     [SerializeField] GameObject mainMenu;
     void Start()
     {
@@ -37,8 +38,6 @@ public partial class UILogin : MonoBehaviour
         unityPlayerAuth.OnUpdateName += UpdateNameVisual;
     }
 
-    
-
     private async void UpdateName()
     {
         await unityPlayerAuth.UpdateName(UpdateNameIF.text);
@@ -55,6 +54,7 @@ public partial class UILogin : MonoBehaviour
         mainMenu.SetActive(true);
         playerIDTxt.text = "ID: " + playerInfo.Id;
         playerNameTxt.text = PlayerName;
+        cloudSave.LoadAllPlayerData();
     }
 
     private async void LoginButton()
@@ -68,4 +68,5 @@ public partial class UILogin : MonoBehaviour
         loginButton?.onClick.RemoveListener(LoginButton);
         unityPlayerAuth.OnSingedIn -= UnityPlayerOnSignedIn;
     }
+    
 }
