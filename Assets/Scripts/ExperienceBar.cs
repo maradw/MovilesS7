@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -28,6 +29,8 @@ public class ExperienceBar : MonoBehaviour
     int armorLevel = 0;
     int fortuneLevel = 0;
     int damageLevel = 0;
+
+    [SerializeField] AdvanceSave advanceSave;
     void Update()
     {
         ClicksInGame();
@@ -114,4 +117,46 @@ public class ExperienceBar : MonoBehaviour
     public void SetArmor(int value) => armorLevel = value;
     public void SetFortune(int value) => fortuneLevel = value;
     public void SetDamage(int value) => damageLevel = value;
+
+
+    public PlayerData GetPlayerDataForSave()
+    {
+        PlayerData data = new PlayerData
+        {
+            level = level,
+            currentClicks = currentClicks,
+            abilityLevel = abilityLevel,
+            strengthLevel = strengthLevel,
+            armorLevel = armorLevel,
+            fortuneLevel = fortuneLevel,
+            damageLevel = damageLevel
+        };
+        return data;
+    }
+
+    public void LoadPlayerData(PlayerData data)
+    {
+        if (data == null) return;
+
+        SetLevel(data.level);
+        SetCurrentClicks(data.currentClicks);
+        SetAbility(data.abilityLevel);
+        SetStrength(data.strengthLevel);
+        SetArmor(data.armorLevel);
+        SetFortune(data.fortuneLevel);
+        SetDamage(data.damageLevel);
+    }
+    public async void SaveExperienceData()
+    {
+        PlayerData data = GetPlayerDataForSave();
+        advanceSave.SetData(data);
+        await advanceSave.SavePlayerData();
+    }
+
+    [Button]
+    public async void LoadExperienceData()
+    {
+        await advanceSave.LoadPlayerData();
+        LoadPlayerData(advanceSave.GetData());
+    }
 }

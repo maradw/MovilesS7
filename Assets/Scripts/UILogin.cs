@@ -22,6 +22,7 @@ public partial class UILogin : MonoBehaviour
     [SerializeField] private UnityPlayerAuth unityPlayerAuth;
     [SerializeField] CloudSave cloudSave;
     [SerializeField] GameObject mainMenu;
+    [SerializeField] AdvanceSave advanceSave;
     void Start()
     {
         loginPanel.gameObject.SetActive(true);
@@ -54,7 +55,9 @@ public partial class UILogin : MonoBehaviour
         mainMenu.SetActive(true);
         playerIDTxt.text = "ID: " + playerInfo.Id;
         playerNameTxt.text = PlayerName;
-        cloudSave.LoadAllPlayerData();
+        //cloudSave.LoadAllPlayerData();
+
+       advanceSave.LoadPlayerData();
     }
 
     private async void LoginButton()

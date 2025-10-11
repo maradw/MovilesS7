@@ -3222,6 +3222,7 @@ MonoBehaviour:
   unityPlayerAuth: {fileID: 937233407}
   cloudSave: {fileID: 340579893}
   mainMenu: {fileID: 1015650988}
+  advanceSave: {fileID: 0}
 --- !u!114 &937233407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4239,6 +4240,7 @@ MonoBehaviour:
   armor: {fileID: 821451887}
   fortune: {fileID: 280461693}
   damage: {fileID: 2103374733}
+  advanceSave: {fileID: 1706026798}
 --- !u!4 &1142962800
 Transform:
   m_ObjectHideFlags: 0
@@ -5209,6 +5211,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692970514}
   m_CullTransparentMesh: 1
+--- !u!1 &1706026797
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1706026799}
+  - component: {fileID: 1706026798}
+  m_Layer: 0
+  m_Name: AdvanceSave
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1706026798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706026797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 903a27a987676ba45a81cc7f45dc326f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    characterName: 
+    level: 0
+    gold: 0
+    schemaVersion: 1
+    currentClicks: 0
+    abilityLevel: 0
+    strengthLevel: 0
+    armorLevel: 0
+    fortuneLevel: 0
+    damageLevel: 0
+    Inventory: []
+--- !u!4 &1706026799
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706026797}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 280.5932, y: 165.3429, z: -79.58319}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1747865642
 GameObject:
   m_ObjectHideFlags: 0
@@ -6348,3 +6406,4 @@ SceneRoots:
   - {fileID: 1152484484}
   - {fileID: 1074419049}
   - {fileID: 340579894}
+  - {fileID: 1706026799}
