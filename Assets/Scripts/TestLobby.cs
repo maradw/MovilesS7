@@ -5,12 +5,16 @@ using Unity.Services.Lobbies.Models;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
 using System.Collections.Generic;
-
+using System;
 public class TestLobby : MonoBehaviour
 {
     public Lobby HostLobby;
     public Lobby JoinLobby;
     private float heartBeatTimer;
+    private float lobbyUpdateTimer;
+
+    public Action<List<Lobby>> OnLobbyRefresh;
+
     private async void Start()
     {
         //await UnityServices. InitializeAsync();
@@ -18,22 +22,41 @@ public class TestLobby : MonoBehaviour
     private void Update()
     {
         HandleLobbyHeartBeat();
+        HandleLobbyPollForUpdates();
     }
     public async void HandleLobbyHeartBeat()
     {
         if (HostLobby != null)
-
-            heartBeatTimer -= Time.deltaTime;
-        if(heartBeatTimer < 0)
         {
-            float heartBeatTimerMax = 15;
-            heartBeatTimer = heartBeatTimerMax;
-            await LobbyService.Instance.SendHeartbeatPingAsync(HostLobby.Id);
+            heartBeatTimer -= Time.deltaTime;
+            if (heartBeatTimer < 0)
+            {
+                float heartbeatTimerMax = 10;
+                heartBeatTimer = heartbeatTimerMax;
+
+                await LobbyService.Instance.SendHeartbeatPingAsync(HostLobby.Id);
+                Debug.Log("HeartBeat");
+            }
         }
     }
 
+    public async void HandleLobbyPollForUpdates()
+    {
+        if (JoinLobby != null)
+        {
+            lobbyUpdateTimer -= Time.deltaTime;
+            if (lobbyUpdateTimer < 0)
+            {
+                float LobbyUpdateTimerMax = 1.1f;
+                lobbyUpdateTimer = LobbyUpdateTimerMax;
 
+                Lobby lobby = await LobbyService.Instance.GetLobbyAsync(JoinLobby.Id);
+                JoinLobby = lobby;
+            }
+        }
+    }
 
+    //-> UI LLAMAR DESDE LA UI
     [Button]
     private async void CreateLobby(string lobbyName , int maxPlayers ,bool isPrivate, string gameMode = "CTF" ,string map = "Peru")
     {
@@ -64,9 +87,9 @@ public class TestLobby : MonoBehaviour
         {
             Debug.LogException(ex);
         }
-       
 
-    }
+
+    }    //-> UI REFRESH BUTTON
     [Button]
     public async void ListLobbies()
     {
@@ -107,7 +130,28 @@ public class TestLobby : MonoBehaviour
 
        
     }
+    //->llamar desde la UI
+    [Button]
+    public async void JoinLobbyByID(string lobbyCode)
+    {
+        try
+        {
+            //Player player = await GetPlayer();
+            JoinLobbyByIdOptions joinLobbyByCodeOptions = new JoinLobbyByIdOptions()
+            {
+                Player = await GetPlayer()
+            };
 
+            Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyCode, joinLobbyByCodeOptions);
+
+            JoinLobby = lobby;
+            Debug.Log("Te uniste al lobby!!!   " + lobby.Name);
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
     public void PrintPlayer()
     {
         PrintPlayers(HostLobby);
@@ -132,9 +176,101 @@ public class TestLobby : MonoBehaviour
         };
     }
 
+    public async void QuickJoin()
+    {
+        try
+        {
+            await LobbyService.Instance.QuickJoinLobbyAsync();
+
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+
+    }
+    [Button]
+    public async void UpdateLobbyGameMode(string gameMode)
+    {
+        try
+        {
+            HostLobby = await LobbyService.Instance.UpdateLobbyAsync
+                (
+                 HostLobby.Id,
+                 new UpdateLobbyOptions
+                 {
+                     Data = new Dictionary<string, DataObject>
+                     {
+                         {"GameMode", new DataObject(DataObject.VisibilityOptions.Member, gameMode) }
+                     }
+                 }
+
+
+                );
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+
+    [Button]
+    public async void LeaveLobby()
+    {
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(JoinLobby.Id, AuthenticationService.Instance.PlayerId);
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+    [Button]
+    public async void KickPlayer(string playerID)
+    {
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(JoinLobby.Id, playerID);
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+    [Button]
+    public async void DeleteLobby()
+    {
+        try
+        {
+            await LobbyService.Instance.DeleteLobbyAsync(JoinLobby.Id);
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
+    [Button]
+    public async void MigrateLobbyHost(string playerID)
+    {
+        try
+        {
+            HostLobby = await LobbyService.Instance.UpdateLobbyAsync(HostLobby.Id,
+                new UpdateLobbyOptions
+                {
+                    HostId = playerID,
+                }
+
+                );
+        }
+        catch (LobbyServiceException ex)
+        {
+            Debug.LogException(ex);
+        }
+    }
 
 
 
 
-        
+
 }
