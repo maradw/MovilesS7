@@ -136,9 +136,7 @@ public class GameManager : NetworkBehaviour
     {
         if (!playerStatesByAccount.TryGetValue(accountID, out PlayerData data))
         {
-            PlayerData NewData = new PlayerData(accountID, Vector3.zero, 100, 5);
-            playerStatesByAccount[accountID] = NewData;
-            SpawnPlayerServer(ID, NewData);
+
         }
         else
         {
@@ -155,12 +153,10 @@ public class GameManager : NetworkBehaviour
     public void SpawnPlayerServer(ulong ID, PlayerData data)
     {
         if (!IsServer) return;
-        Vector3 spawnPos = data.position;
-        GameObject player = Instantiate(playerprefab, spawnPos, Quaternion.identity);
-        var netObj = player.GetComponent<NetworkObject>();
-        netObj.SpawnWithOwnership(ID, true);
 
-        player.GetComponent<SimplePlayerController>().SetData(data);
+
+
+
     }
 
     void Update()
@@ -192,20 +188,17 @@ public class GameManager : NetworkBehaviour
     {
         if (!playerStatesByAccount.TryGetValue(accountID, out PlayerData data))
         {
-            data = new PlayerData(accountID, Respawn(), 100, 5);
+
             playerStatesByAccount[accountID] = data;
         }
 
         if (isDeath)
         {
             Vector3 rand = Respawn();
-            data.position = rand;
-            data.health = 100;
+           
         }
 
-        GameObject player = Instantiate(playerprefab, data.position, Quaternion.identity);
-        player.GetComponent<NetworkObject>().SpawnWithOwnership(clientId, true);
-        player.GetComponent<SimplePlayerController>().SetData(data);
+
     }
 
     // ====== LOBBY RPCS ======
@@ -280,7 +273,6 @@ public class GameManager : NetworkBehaviour
             string accId = clientId.ToString();
             if (!playerStatesByAccount.TryGetValue(accId, out var data))
             {
-                data = new PlayerData(accId, Respawn(), 100, 5);
                 playerStatesByAccount[accId] = data;
             }
 
